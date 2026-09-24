@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Canon — See Impossible. EOS Innovation.</title>
+  <meta name="description" content="Canon's flagship EOS lineup redefines imaging excellence. Full-frame mirrorless precision, cinematic lenses, and decades of optical mastery — all in one system." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23000'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='14' font-weight='bold' fill='white'%3EC%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./canon.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       OPENING: LENS APERTURE ENTRANCE (Auto-plays, 120 frames)
+       ═══════════════════════════════════════════ -->
+  <div id="opening-screen" class="opening-screen">
+    <canvas id="opening-canvas"></canvas>
+    <div class="opening-brand" id="opening-brand">
+      <div class="opening-logo">
+        <span class="logo-canon">Canon</span>
+      </div>
+      <p class="opening-tagline">See Impossible.</p>
+    </div>
+    <div class="opening-skip" id="opening-skip">SKIP INTRO ↓</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════ -->
+  <nav class="site-nav" id="site-nav">
+    <a href="#hero" class="nav-logo" id="nav-logo">
+      <span>Canon</span>
+    </a>
+    <div class="nav-links">
+      <a href="#hero" class="nav-link">Overview</a>
+      <a href="#explore" class="nav-link">Explore</a>
+      <a href="#products" class="nav-link">Products</a>
+      <a href="#craft" class="nav-link">The Craft</a>
+    </div>
+    <div class="nav-actions">
+      <a href="#products" class="nav-cta">Shop EOS</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 1 + 2: HERO → EXPLORE
+       Full-width scroll-driven: intro frames on right, text on left
+       Section height = 2×200vh for scroll scrubbing
+       ═══════════════════════════════════════════ -->
+  <div class="scroll-zone" id="scroll-zone">
+
+    <!-- Fixed canvas backdrop for sections 1 & 2 -->
+    <div class="intro-canvas-wrap" id="intro-canvas-wrap">
+      <canvas id="intro-canvas"></canvas>
+    </div>
+
+    <!-- SECTION 1 — HERO (pinned left content) -->
+    <section class="hero-section" id="hero">
+      <div class="hero-content" id="hero-content">
+        <div class="eyebrow-row">
+          <span class="eyebrow-badge">NEW</span>
+          <span class="eyebrow-label">EOS R SYSTEM · 2025</span>
+        </div>
+        <h1 class="hero-headline">
+          Precision<br/>
+          <span class="headline-light">Redefined.</span>
+        </h1>
+        <p class="hero-body">
+          Every photon captured. Every frame perfected. Canon EOS brings decades of optical mastery into a full-frame mirrorless system built for those who refuse to settle.
+        </p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-val">45MP</span>
+            <span class="stat-lbl">Full-Frame Sensor</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-val">20fps</span>
+            <span class="stat-lbl">Continuous Shoot</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-val">0.03s</span>
+            <span class="stat-lbl">AF Response</span>
+          </div>
+        </div>
+        <div class="hero-ctas">
+          <a href="#explore" class="cta-primary" id="hero-explore-btn">Explore EOS R</a>
+          <a href="#products" class="cta-ghost">View All Products</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 — EXPLORE / ENGINEERING (pinned left content) -->
+    <section class="explore-section" id="explore">
+      <div class="explore-content" id="explore-content">
+        <div class="eyebrow-row">
+          <span class="eyebrow-badge">ENGINEERING</span>
+          <span class="eyebrow-label">INSIDE THE EOS 5D</span>
+        </div>
+        <h2 class="section-headline">
+          Every<br/>
+          <span class="headline-light">Component,</span><br/>
+          Obsessed Over.
+        </h2>
+        <p class="section-body">
+          The EOS 5D Mark IV is not just assembled — it is architected. 2,500+ precision components. A DIGIC 7 processor operating at 100,000 MIPS. A sensor resolving 30.4 megapixels of light-gathering intelligence.
+        </p>
+        <ul class="feature-list">
+          <li><span class="feat-icon">◆</span> Dual Pixel CMOS AF II — 100% area coverage</li>
+          <li><span class="feat-icon">◆</span> Weather-sealed magnesium alloy body</li>
+          <li><span class="feat-icon">◆</span> In-body 5-axis image stabilization</li>
+          <li><span class="feat-icon">◆</span> 4K RAW cinema-grade video capture</li>
+        </ul>
+        <a href="#products" class="cta-primary">Discover the 5D Series</a>
+      </div>
+    </section>
+
+  </div><!-- /scroll-zone -->
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 3 — PRODUCT CAROUSEL
+       White lightning glow, dark background, auto-scroll left→right
+       ═══════════════════════════════════════════ -->
+  <section class="carousel-section" id="products">
+    <div class="lightning-bg" aria-hidden="true">
+      <div class="lightning-orb orb-1"></div>
+      <div class="lightning-orb orb-2"></div>
+      <div class="lightning-orb orb-3"></div>
+    </div>
+
+    <div class="carousel-header">
+      <div class="eyebrow-row centered">
+        <span class="eyebrow-badge">THE LINEUP</span>
+        <span class="eyebrow-label">EOS COLLECTION · 2025</span>
+      </div>
+      <h2 class="carousel-title">Built for Every Vision.</h2>
+      <p class="carousel-desc">From compact mirrorless to full-frame professional — there is an EOS for every story worth telling.</p>
+    </div>
+
+    <!-- Infinite scroll track -->
+    <div class="carousel-viewport" id="carousel-viewport">
+      <div class="carousel-track" id="carousel-track">
+        <!-- Cards injected by JS (doubled for seamless loop) -->
+      </div>
+    </div>
+
+    <!-- Dots -->
+    <div class="carousel-dots" id="carousel-dots"></div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 4 — THE CRAFT
+       Left: rich text content | Right: looping canvas (4th frames)
+       ═══════════════════════════════════════════ -->
+  <section class="craft-section" id="craft">
+    <!-- Canvas loop on right -->
+    <div class="craft-canvas-wrap" id="craft-canvas-wrap">
+      <canvas id="craft-canvas"></canvas>
+      <div class="craft-canvas-fade"></div>
+    </div>
+
+    <!-- Text on left -->
+    <div class="craft-content" id="craft-content">
+      <div class="eyebrow-row">
+        <span class="eyebrow-badge">THE CRAFT</span>
+        <span class="eyebrow-label">L-SERIES OPTICS</span>
+      </div>
+      <h2 class="section-headline">
+        Optics That<br/>
+        <span class="headline-light">Define</span><br/>
+        a Standard.
+      </h2>
+      <p class="section-body">
+        The red ring of a Canon L-Series lens is not decoration — it is a declaration. Ultra-low dispersion glass, fluorite elements, and ring-type USM motors deliver resolving power that professionals trust on every shoot, every deadline, every frame.
+      </p>
+
+      <div class="craft-specs">
+        <div class="cspec-row">
+          <span class="cspec-name">RF 28-70mm f/2L USM</span>
+          <span class="cspec-tag">Pro Zoom</span>
+        </div>
+        <div class="cspec-row">
+          <span class="cspec-name">RF 85mm f/1.2L USM DS</span>
+          <span class="cspec-tag">Portrait</span>
+        </div>
+        <div class="cspec-row">
+          <span class="cspec-name">RF 100-500mm f/4.5–7.1L IS USM</span>
+          <span class="cspec-tag">Telephoto</span>
+        </div>
+        <div class="cspec-row">
+          <span class="cspec-name">RF 15-35mm f/2.8L IS USM</span>
+          <span class="cspec-tag">Wide Angle</span>
+        </div>
+      </div>
+
+      <div class="craft-ctas">
+        <a href="#products" class="cta-primary">Explore RF Lenses</a>
+        <a href="#hero" class="cta-ghost">Back to Overview</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo">Canon</span>
+        <p>Imaging excellence since 1937. Trusted by the world's finest photographers.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <span class="footer-col-title">Products</span>
+          <a href="#">EOS Cameras</a>
+          <a href="#">RF Lenses</a>
+          <a href="#">EF Lenses</a>
+          <a href="#">Accessories</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Support</span>
+          <a href="#">Downloads</a>
+          <a href="#">Service & Repair</a>
+          <a href="#">Warranty</a>
+          <a href="#">Contact Us</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Company</span>
+          <a href="#">About Canon</a>
+          <a href="#">Sustainability</a>
+          <a href="#">Careers</a>
+          <a href="#">Press</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Canon Inc. All rights reserved.</span>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Cookie Settings</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="./canon.js"></script>
+</body>
+</html>

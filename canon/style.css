@@ -1,0 +1,927 @@
+/* ==========================================================================
+   THE LIFTERS // High Performance Strength Sanctum
+   Cinematic 3D Scroll Canvas & Minimalist Luxury Design
+   ========================================================================== */
+
+:root {
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Roboto Mono', monospace;
+
+  /* Color Palette - Dark Obsidian & Warm Amber Tungsten */
+  --bg-core: #060709;
+  --bg-deep: #030405;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(240, 243, 246, 0.82);
+  --text-dim: rgba(240, 243, 246, 0.45);
+  
+  --amber-primary: #ff9e3b;
+  --amber-glow: rgba(255, 158, 59, 0.35);
+  --amber-deep: #d97706;
+  --amber-soft: rgba(255, 158, 59, 0.12);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(255, 158, 59, 0.5);
+
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg-core);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: var(--bg-core);
+  min-height: 100vh;
+  position: relative;
+  user-select: none;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   1. PRELOADER
+   ========================================================================== */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #040507;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s var(--ease-smooth), visibility 0.8s var(--ease-smooth);
+}
+
+.preloader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader-inner {
+  width: 90%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.preloader-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.preloader-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+
+.preloader-sub {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--amber-primary);
+  font-weight: 600;
+}
+
+.preloader-track {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.preloader-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ff7a00, #ffb347);
+  box-shadow: 0 0 16px var(--amber-primary);
+  transition: width 0.15s ease-out;
+}
+
+.preloader-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+/* ==========================================================================
+   2. FIXED CANVAS BACKGROUND (SOLE VISUAL BACKDROP)
+   ========================================================================== */
+.canvas-viewport {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+#experience-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.canvas-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 45% 50%, rgba(4, 5, 8, 0.05) 0%, rgba(4, 5, 8, 0.45) 70%, rgba(4, 5, 8, 0.82) 100%);
+  mix-blend-mode: multiply;
+}
+
+/* ==========================================================================
+   3. FLOATING HUD HEADER (15% PADDING ALIGNED)
+   ========================================================================== */
+.hud-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 1.5rem 15%;
+  pointer-events: none;
+  transition: transform 0.4s ease;
+}
+
+.hud-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+  gap: 1.5rem;
+}
+
+/* Brand Link */
+.hud-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-decoration: none;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.brand-beacon {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.beacon-ping {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: var(--amber-primary);
+  opacity: 0.5;
+  animation: beacon-pulse 2.2s infinite cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.beacon-core {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber-primary);
+  box-shadow: 0 0 10px var(--amber-primary);
+}
+
+@keyframes beacon-pulse {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.brand-text {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.14em;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.brand-sub {
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+  color: var(--amber-primary);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* Sleek Segmented Pill Navigation Bar */
+.hud-nav {
+  display: flex;
+  align-items: center;
+  background: rgba(10, 12, 16, 0.72);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.35rem 0.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+  gap: 0.25rem;
+}
+
+.nav-pill {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-dim);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  transition: all 0.3s var(--ease-smooth);
+  position: relative;
+}
+
+.nav-pill:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-pill.active {
+  background: linear-gradient(135deg, rgba(255, 158, 59, 0.22), rgba(217, 119, 6, 0.12));
+  color: #ffffff;
+  border: 1px solid rgba(255, 158, 59, 0.45);
+  box-shadow: 0 0 14px rgba(255, 158, 59, 0.25);
+}
+
+.pill-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--amber-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: scale(0.5);
+}
+
+.nav-pill.active .pill-dot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.pill-num {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  opacity: 0.65;
+  color: var(--amber-primary);
+}
+
+.nav-pill.active .pill-num {
+  opacity: 1;
+}
+
+.nav-sep {
+  color: rgba(255, 255, 255, 0.12);
+  font-size: 0.65rem;
+  user-select: none;
+}
+
+/* Right HUD Controls */
+.hud-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.hud-btn {
+  background: rgba(10, 12, 16, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  padding: 0.48rem 0.9rem;
+  border-radius: 9999px;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.hud-btn:hover {
+  border-color: rgba(255, 158, 59, 0.3);
+  color: #ffffff;
+}
+
+.audio-wave {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 12px;
+}
+
+.audio-wave span {
+  width: 2px;
+  height: 4px;
+  background: var(--amber-primary);
+  border-radius: 1px;
+  transition: height 0.2s ease;
+}
+
+.audio-active .audio-wave span:nth-child(1) {
+  animation: audio-bar 0.7s infinite alternate ease-in-out;
+}
+.audio-active .audio-wave span:nth-child(2) {
+  animation: audio-bar 0.9s infinite alternate ease-in-out 0.2s;
+}
+.audio-active .audio-wave span:nth-child(3) {
+  animation: audio-bar 0.6s infinite alternate ease-in-out 0.4s;
+}
+
+@keyframes audio-bar {
+  0% { height: 3px; }
+  100% { height: 12px; }
+}
+
+.hud-action-btn {
+  background: linear-gradient(135deg, var(--amber-primary), var(--amber-deep));
+  color: #000000;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.52rem 1.15rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  box-shadow: 0 4px 18px rgba(255, 158, 59, 0.35);
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.hud-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(255, 158, 59, 0.5);
+}
+
+/* ==========================================================================
+   4. BOTTOM TELEMETRY HUD (15% PADDING ALIGNED)
+   ========================================================================== */
+.hud-telemetry {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.5rem 15%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.telemetry-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.72rem;
+  background: rgba(10, 12, 16, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 0.42rem 0.95rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  pointer-events: auto;
+}
+
+.telemetry-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.telemetry-label {
+  color: var(--text-dim);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+
+.telemetry-val {
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.telemetry-sep {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.telemetry-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.scroll-cue {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--amber-primary);
+  background: rgba(10, 12, 16, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.32rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 158, 59, 0.25);
+  animation: float-nudge 2s infinite ease-in-out;
+}
+
+@keyframes float-nudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
+.telemetry-progress-rail {
+  width: 180px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.telemetry-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--amber-primary);
+  box-shadow: 0 0 8px var(--amber-primary);
+}
+
+/* ==========================================================================
+   5. STRICT 4-SECTION SCROLL STORY (15% PADDING FROM LEFT & RIGHT, ALL LEFT ALIGNED)
+   ========================================================================== */
+.story-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+/* Each section is 220vh tall to allow ample smooth scroll scrubbing between stages */
+.story-section {
+  position: relative;
+  width: 100%;
+  height: 220vh;
+  pointer-events: none;
+}
+
+/* The sticky container locks the text in place at 15% padding from left & right */
+.section-content {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  padding-left: 15%;
+  padding-right: 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  pointer-events: auto;
+  
+  /* Smooth opacity & transform controlled via JS scroll mapping */
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+/* Content Container: Unified max-width to maintain clean typography hierarchy */
+.section-inner {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+/* ==========================================================================
+   6. OPTIMIZED TYPOGRAPHY & CARDS
+   ========================================================================== */
+.tag-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.badge-tag {
+  font-family: var(--font-mono);
+  font-size: clamp(0.68rem, 0.78vw, 0.75rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--amber-primary);
+  background: var(--amber-soft);
+  border: 1px solid rgba(255, 158, 59, 0.3);
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+}
+
+.badge-dim {
+  font-size: clamp(0.68rem, 0.78vw, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 4.0vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.85), 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #ffffff 30%, var(--amber-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section-desc {
+  font-size: clamp(0.95rem, 1.1vw, 1.06rem);
+  line-height: 1.62;
+  color: var(--text-secondary);
+  max-width: 540px;
+  margin-bottom: 1.75rem;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9);
+}
+
+/* Compact, Sleek Spec Grid */
+.spec-grid {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.spec-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.65rem 1.1rem;
+  background: rgba(10, 12, 16, 0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  min-width: 125px;
+  transition: border-color 0.3s ease;
+}
+
+.spec-card:hover {
+  border-color: rgba(255, 158, 59, 0.4);
+}
+
+.spec-val {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1.55vw, 1.55rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.spec-val small {
+  font-size: 0.65em;
+  margin-left: 2px;
+  color: var(--amber-primary);
+}
+
+.spec-lbl {
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* Call to Action Buttons */
+.cta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.primary-btn {
+  background: #ffffff;
+  color: #050507;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.82rem 1.65rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.primary-btn:hover {
+  background: var(--amber-primary);
+  color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255, 158, 59, 0.4);
+}
+
+.primary-btn.pulse-glow {
+  background: linear-gradient(135deg, var(--amber-primary), #e67e22);
+  color: #000000;
+  box-shadow: 0 6px 28px rgba(255, 158, 59, 0.45);
+}
+
+.primary-btn.pulse-glow:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 36px rgba(255, 158, 59, 0.65);
+}
+
+.secondary-btn {
+  background: rgba(10, 12, 16, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 0.82rem 1.5rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.secondary-btn:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   7. MODAL STYLES (MEMBERSHIP INQUIRY)
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(4, 5, 8, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.modal-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.modal-card {
+  width: 90%;
+  max-width: 480px;
+  background: #0d0f13;
+  border: 1px solid rgba(255, 158, 59, 0.25);
+  border-radius: 16px;
+  padding: 2.5rem;
+  position: relative;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
+  transform: translateY(20px);
+  transition: transform 0.3s var(--ease-smooth);
+}
+
+.modal-backdrop.active .modal-card {
+  transform: translateY(0);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.8rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+  color: #ffffff;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.modal-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1.75rem;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+.form-group input,
+.form-group select {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--amber-primary);
+  background: rgba(255, 158, 59, 0.05);
+}
+
+.submit-btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.form-success {
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #86efac;
+  font-size: 0.85rem;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   8. RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 1200px) {
+  .hud-header {
+    padding: 1.25rem 10%;
+  }
+  .hud-telemetry {
+    padding: 1.25rem 10%;
+  }
+  .section-content {
+    padding-left: 10%;
+    padding-right: 10%;
+  }
+}
+
+@media (max-width: 900px) {
+  .hud-nav {
+    display: none;
+  }
+  .hud-header {
+    padding: 1rem 6%;
+  }
+  .hud-telemetry {
+    padding: 1rem 6%;
+  }
+  .section-content {
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+  .section-title {
+    font-size: 2.4rem;
+  }
+  .telemetry-sep, #telemetry-stage {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .hud-header {
+    padding: 0.85rem 5%;
+  }
+  .hud-telemetry {
+    padding: 0.85rem 5%;
+  }
+  .section-content {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+  .spec-grid {
+    gap: 0.5rem;
+  }
+  .spec-card {
+    min-width: 105px;
+    padding: 0.55rem 0.85rem;
+  }
+  .modal-card {
+    padding: 1.75rem 1.25rem;
+  }
+}
